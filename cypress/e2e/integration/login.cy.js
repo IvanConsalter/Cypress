@@ -17,4 +17,15 @@ describe('Curso Cypress', () => {
     cy.get('.btn').click();
     cy.get('.toast-message').should('contain', 'Conta inserida com sucesso');
   });
+  
+  it('deve editar uma conta', () => {
+    cy.get('[data-test="menu-settings"]').click();
+    cy.get('[href="/contas"]').click();
+    cy.xpath("//table//td[contains(., 'Teste Conta')]/..//i[@class='far fa-edit']").click();
+    cy.get('[data-test="nome"]')
+      .clear()
+      .type('Teste Conta Editar');
+    cy.get('.btn').click();
+    cy.get('.toast-message').should('contain', 'Conta atualizada com sucesso');
+  });
 });
