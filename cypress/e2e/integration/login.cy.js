@@ -1,31 +1,33 @@
 /// <reference types="cypress" />
 
+import loc from '../../support/locators';
+
 describe('Curso Cypress', () => {
 
   before( () => {
     cy.visit(Cypress.env('baseUrl'));
-    cy.get('[data-test="email"]').type(Cypress.env('login'));
-    cy.get('[data-test="passwd"]').type(Cypress.env('password'));
-    cy.get('.btn').click();
-    cy.get('.toast-message').should('contain', 'Bem vindo');
+    cy.get(loc.LOGIN.EMAIL).type(Cypress.env('login'));
+    cy.get(loc.LOGIN.PASSWORD).type(Cypress.env('password'));
+    cy.get(loc.LOGIN.BTN).click();
+    cy.get(loc.MESSAGE).should('contain', 'Bem vindo');
   });
 
   it('deve inserir uma conta', () => {
-    cy.get('[data-test="menu-settings"]').click();
-    cy.get('[href="/contas"]').click();
-    cy.get('[data-test="nome"]').type('Teste Conta');
-    cy.get('.btn').click();
-    cy.get('.toast-message').should('contain', 'Conta inserida com sucesso');
+    cy.get(loc.MENU.BTN_SETTINGS).click();
+    cy.get(loc.MENU.ROTA_PARA_CONTA).click();
+    cy.get(loc.CONTAS.INPUT_NOME).type('Teste Conta');
+    cy.get(loc.CONTAS.BTN_ADD).click();
+    cy.get(loc.MESSAGE).should('contain', 'Conta inserida com sucesso');
   });
   
   it('deve editar uma conta', () => {
-    cy.get('[data-test="menu-settings"]').click();
-    cy.get('[href="/contas"]').click();
-    cy.xpath("//table//td[contains(., 'Teste Conta')]/..//i[@class='far fa-edit']").click();
-    cy.get('[data-test="nome"]')
+    cy.get(loc.MENU.BTN_SETTINGS).click();
+    cy.get(loc.MENU.ROTA_PARA_CONTA).click();
+    cy.xpath(loc.CONTAS.BTN_EDITAR).click();
+    cy.get(loc.CONTAS.INPUT_NOME)
       .clear()
       .type('Teste Conta Editar');
-    cy.get('.btn').click();
-    cy.get('.toast-message').should('contain', 'Conta atualizada com sucesso');
+    cy.get(loc.CONTAS.BTN_ADD).click();
+    cy.get(loc.MESSAGE).should('contain', 'Conta atualizada com sucesso');
   });
 });
