@@ -5,11 +5,8 @@ import loc from '../../support/locators';
 describe('Curso Cypress', () => {
 
   before( () => {
-    cy.visit(Cypress.env('baseUrl'));
-    cy.get(loc.LOGIN.EMAIL).type(Cypress.env('login'));
-    cy.get(loc.LOGIN.PASSWORD).type(Cypress.env('password'));
-    cy.get(loc.LOGIN.BTN).click();
-    cy.get(loc.MESSAGE).should('contain', 'Bem vindo');
+    cy.login(Cypress.env('login'), Cypress.env('password'));
+    cy.resetApp();
   });
 
   it('deve inserir uma conta', () => {

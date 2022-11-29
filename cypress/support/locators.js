@@ -11,7 +11,8 @@ const LOCATORS = {
   CONTAS: {
     INPUT_NOME: '[data-test="nome"]',
     BTN_ADD: '.btn',
-    BTN_EDITAR: "//table//td[contains(., 'Teste Conta')]/..//i[@class='far fa-edit']"
+    BTN_EDITAR: "//table//td[contains(., 'Teste Conta')]/..//i[@class='far fa-edit']",
+    BTN_RESETAR: "[href='/reset']",
   },
   MESSAGE: '.toast-message'
 }
