@@ -25,4 +25,13 @@ describe('Curso Cypress', () => {
     cy.get(loc.CONTAS.BTN_ADD).click();
     cy.get(loc.MESSAGE).should('contain', 'Conta atualizada com sucesso');
   });
+
+  it('não deve criar uma conta já existente', () => {
+    cy.acessarMenuConta();
+    cy.get(loc.CONTAS.INPUT_NOME)
+      .clear()
+      .type('Teste Conta Editar');
+    cy.get(loc.CONTAS.BTN_ADD).click();
+    cy.get(loc.MESSAGE).should('contain', 'code 400');
+  });
 });
