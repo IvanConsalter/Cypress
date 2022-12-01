@@ -8,7 +8,8 @@ const LOCATORS = {
     HOME: '[data-test="menu-home"]',
     BTN_SETTINGS: '[data-test="menu-settings"]',
     ROTA_PARA_CONTA: '[href="/contas"]',
-    MOVIMENTACAO: '[data-test=menu-movimentacao]'
+    MOVIMENTACAO: '[data-test=menu-movimentacao]',
+    BTN_EXTRATO: '[data-test="menu-extrato"]'
   },
   CONTAS: {
     INPUT_NOME: '[data-test="nome"]',
@@ -28,7 +29,10 @@ const LOCATORS = {
     LINHAS: '.list-group > li',
     FN_XP_BUSCA_ELEMENTO: 
       (descricao, valor) => 
-        `//span[contains(., ${descricao})]/following-sibling::small[contains(., ${valor})]`
+        `//span[contains(., ${descricao})]/following-sibling::small[contains(., ${valor})]`,
+    FN_XP_REMOVER_ELEMENTO: 
+      (conta) => 
+        `//small[contains(., '${conta}')]/../../..//a//i[@class='far fa-trash-alt']`
   },
   SALDO: {
     FN_XP_SALDO_CONTA: (nome) => `//td[contains(., '${nome}')]/../td[2]`

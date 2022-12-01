@@ -59,4 +59,10 @@ describe('Curso Cypress', () => {
     cy.get(loc.MENU.HOME).click();
     cy.xpath(loc.SALDO.FN_XP_SALDO_CONTA('Teste Conta Editar')).should('contain', '123,00');
   });
+
+  it('deve remover uma movimentação', () => {
+    cy.get(loc.MENU.BTN_EXTRATO).click();
+    cy.xpath(loc.EXTRATO.FN_XP_REMOVER_ELEMENTO('Teste Conta Editar')).click();
+    cy.get(loc.MESSAGE).should('contain', 'sucesso');
+  });
 });
