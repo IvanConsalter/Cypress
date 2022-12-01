@@ -18,7 +18,7 @@ describe('Curso Cypress', () => {
   
   it('deve editar uma conta', () => {
     cy.acessarMenuConta();
-    cy.xpath(loc.CONTAS.BTN_EDITAR).click();
+    cy.xpath(loc.CONTAS.FN_BTN_EDITAR('Teste Conta')).click();
     cy.get(loc.CONTAS.INPUT_NOME)
       .clear()
       .type('Teste Conta Editar');
@@ -44,12 +44,19 @@ describe('Curso Cypress', () => {
     cy.get(loc.MOVIMENTACAO.DESCRICAO).type(descricao);
     cy.get(loc.MOVIMENTACAO.VALOR).type(valor);
     cy.get(loc.MOVIMENTACAO.INTERESSADO).type('Interessado');
+    cy.get(loc.MOVIMENTACAO.CONTA).select('Teste Conta Editar');
+    cy.get(loc.MOVIMENTACAO.STATUS).click();
     cy.get(loc.MOVIMENTACAO.BTN_SALVAR).click();
 
     cy.get(loc.MESSAGE).should('contain', 'sucesso');
 
-    cy.get('.list-group > li').should('have.length', 7);
-    cy.xpath(`//span[contains(., ${descricao})]/following-sibling::small[contains(., ${valor})]`)
+    cy.get(loc.EXTRATO.LINHAS).should('have.length', 7);
+    cy.xpath(loc.EXTRATO.FN_XP_BUSCA_ELEMENTO(descricao, valor))
       .should('exist');
+  });
+
+  it('deve verificar um valor', () => {
+    cy.get(loc.MENU.HOME).click();
+    cy.xpath(loc.SALDO.FN_XP_SALDO_CONTA('Teste Conta Editar')).should('contain', '123,00');
   });
 });
