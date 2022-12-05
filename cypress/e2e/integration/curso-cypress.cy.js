@@ -65,4 +65,21 @@ describe('Curso Cypress', () => {
     cy.xpath(loc.EXTRATO.FN_XP_REMOVER_ELEMENTO('Teste Conta Editar')).click();
     cy.get(loc.MESSAGE).should('contain', 'sucesso');
   });
+
+  it('deve alterar status de uma conta', () => {
+    cy.get(loc.MENU.BTN_EXTRATO).click();
+    cy.xpath(loc.EXTRATO.FN_XP_ATUALIZAR_ELEMENTO('Movimentacao 1, calculo saldo')).click();
+
+    cy.get(loc.MOVIMENTACAO.DESCRICAO).should('have.value', 'Movimentacao 1, calculo saldo');
+    cy.get(loc.MOVIMENTACAO.BTN_STATUS).click();
+    cy.get(loc.MOVIMENTACAO.BTN_SALVAR).click();
+    cy.get(loc.MESSAGE).should('contain', 'sucesso');
+  });
+
+  it('deve verificar se saldo da conta alterou', () => {
+    cy.get(loc.MENU.HOME).click();
+    cy.reload();
+    cy.login(Cypress.env('login'), Cypress.env('password'));
+    cy.xpath(loc.SALDO.FN_XP_SALDO_CONTA('Conta para saldo')).should('contain', '4.034,00');
+  });
 });

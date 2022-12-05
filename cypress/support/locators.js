@@ -23,7 +23,8 @@ const LOCATORS = {
     INTERESSADO: '[data-test=envolvido]',
     STATUS: '[data-test=status]',
     CONTA: '[data-test="conta"]',
-    BTN_SALVAR: '.btn-primary'
+    BTN_SALVAR: '.btn-primary',
+    BTN_STATUS: '[data-test="status"]',
   },
   EXTRATO: {
     LINHAS: '.list-group > li',
@@ -32,7 +33,10 @@ const LOCATORS = {
         `//span[contains(., ${descricao})]/following-sibling::small[contains(., ${valor})]`,
     FN_XP_REMOVER_ELEMENTO: 
       (conta) => 
-        `//small[contains(., '${conta}')]/../../..//a//i[@class='far fa-trash-alt']`
+        `//small[contains(., '${conta}')]/../../..//a//i[@class='far fa-trash-alt']`,
+    FN_XP_ATUALIZAR_ELEMENTO: 
+      (conta) => 
+        `//span[contains(., '${conta}')]/../../..//a//i[@class='fas fa-edit']`
   },
   SALDO: {
     FN_XP_SALDO_CONTA: (nome) => `//td[contains(., '${nome}')]/../td[2]`
