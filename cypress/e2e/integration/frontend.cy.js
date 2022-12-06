@@ -3,7 +3,7 @@
 import '../../support/commandsConta';
 import loc from '../../support/locators';
 
-describe('Curso Cypress', () => {
+describe('Teste frontend', () => {
 
   before( () => {
     cy.login(Cypress.env('login'), Cypress.env('password'));
