@@ -61,3 +61,15 @@ Cypress.Commands.add('resetRest', (token) => {
   })
   .its('status').should('be.equal', 200)
 });
+
+Cypress.Commands.add('getIdConta', (token, nome) => {
+  cy.request({
+    method: 'GET',
+    url: `${Cypress.env('baseUrlRest')}/contas`,
+    headers: { Authorization: `JWT ${token}` },
+    qs: {
+      nome: nome
+    }
+  })
+  .then( res => res.body[0].id)
+})
