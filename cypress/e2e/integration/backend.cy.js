@@ -8,12 +8,13 @@ describe('Teste Api Rest', () => {
     cy.getToken(Cypress.env('login'), Cypress.env('password'))
     .then( tkn => {
       token = tkn;
+      cy.resetRest(token);
     })
   });
 
   it('deve inserir uma conta', () => {
     cy.request({
-      url: 'https://barrigarest.wcaquino.me/contas',
+      url: `${Cypress.env('baseUrlRest')}/contas`,
       method: 'POST',
       headers: {
         Authorization: `JWT ${token}`
