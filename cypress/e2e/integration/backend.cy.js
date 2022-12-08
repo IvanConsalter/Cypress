@@ -2,34 +2,26 @@
 
 describe('Teste Api Rest', () => {
 
+  let token;
+
   before( () => {
-    // cy.login(Cypress.env('login'), Cypress.env('password'));
-    // cy.resetApp();
+    cy.getToken(Cypress.env('login'), Cypress.env('password'))
+    .then( tkn => {
+      token = tkn;
+    })
   });
 
   it('deve inserir uma conta', () => {
     cy.request({
+      url: 'https://barrigarest.wcaquino.me/contas',
       method: 'POST',
-      url: 'https://barrigarest.wcaquino.me/signin',
+      headers: {
+        Authorization: `JWT ${token}`
+      },
       body: {
-        email: Cypress.env('login'),
-        redirecionar: false,
-        senha: Cypress.env('password')
+        nome: 'Conta via rest'
       }
-    })
-    .its('body.token').should('not.be.empty')
-    .then(token => {
-      cy.request({
-        url: 'https://barrigarest.wcaquino.me/contas',
-        method: 'POST',
-        headers: {
-          Authorization: `JWT ${token}`
-        },
-        body: {
-          nome: 'Conta via rest'
-        }
-      }).as('response')
-    })
+    }).as('response')
 
     cy.get('@response').then( res => {
       expect(res.status).to.be.equal(201)
