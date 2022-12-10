@@ -1,8 +1,12 @@
 /// <reference types="cypress" />
 
+const dayjs = require('dayjs')
+
 describe('Teste Api Rest', () => {
 
   let token;
+  const contaRest = 'Conta via rest';
+  const contaAlteradaRest = 'Conta alterada via rest';
 
   before( () => {
     cy.getToken(Cypress.env('login'), Cypress.env('password'))
@@ -20,19 +24,19 @@ describe('Teste Api Rest', () => {
         Authorization: `JWT ${token}`
       },
       body: {
-        nome: 'Conta via rest'
+        nome: contaRest
       }
     }).as('response')
 
     cy.get('@response').then( res => {
       expect(res.status).to.be.equal(201)
       expect(res.body).to.have.property('id')
-      expect(res.body).to.have.property('nome', 'Conta via rest')
+      expect(res.body).to.have.property('nome', contaRest)
     })
   });
   
   it('deve editar uma conta', () => {
-    cy.getIdConta(token, 'Conta via rest').then( idConta => {
+    cy.getIdConta(token, contaRest).then( idConta => {
       cy.request({
         method: 'PUT',
         url: `${Cypress.env('baseUrlRest')}/contas/${idConta}`,
@@ -40,7 +44,7 @@ describe('Teste Api Rest', () => {
           Authorization: `JWT ${token}`
         },
         body: {
-          nome: 'Conta alterada via rest'
+          nome: contaAlteradaRest
         }
       }).as('response')
     })
@@ -48,7 +52,7 @@ describe('Teste Api Rest', () => {
     cy.get('@response').then( res => {
       expect(res.status).to.be.equal(200)
       expect(res.body).to.have.property('id')
-      expect(res.body).to.have.property('nome', 'Conta alterada via rest')
+      expect(res.body).to.have.property('nome', contaAlteradaRest)
     });
   });
 
@@ -60,7 +64,7 @@ describe('Teste Api Rest', () => {
         Authorization: `JWT ${token}`
       },
       body: {
-        nome: 'Conta alterada via rest'
+        nome: contaAlteradaRest
       },
       failOnStatusCode: false
     }).as('response')
@@ -72,6 +76,31 @@ describe('Teste Api Rest', () => {
   });
 
   it('deve criar uma movimentação', () => {
+    cy.getIdConta(token, contaAlteradaRest).then( idConta => {
+      cy.request({
+        method: 'POST',
+        url: `${Cypress.env('baseUrlRest')}/transacoes`,
+        headers: {
+          Authorization: `JWT ${token}`
+        },
+        body: {
+          conta_id: idConta,
+          data_pagamento: dayjs().add(1, 'day').format('DD/MM/YYYY'),
+          data_transacao: dayjs().format('DD/MM/YYYY'),
+          descricao: "Desc rest",
+          envolvido: "Interessado rest",
+          status: true,
+          tipo: "REC",
+          valor: "123"
+        },
+      }).as('response')
+  
+      cy.get('@response').then( res => {
+        expect(res.status).to.be.equal(201)
+        expect(res.body).to.have.property('id')
+        expect(res.body).to.have.property('conta_id', idConta)
+      });
+    })
   });
 
   it('deve verificar um valor', () => {
