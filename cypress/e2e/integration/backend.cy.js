@@ -104,6 +104,20 @@ describe('Teste Api Rest', () => {
   });
 
   it('deve verificar um valor', () => {
+    cy.request({
+      method: 'GET',
+      url: `${Cypress.env('baseUrlRest')}/saldo`,
+      headers: {
+        Authorization: `JWT ${token}`
+      },
+    }).then( resposta => {
+      let saldoConta = null;
+      resposta.body.forEach( item => {
+        if(item.conta === contaAlteradaRest) saldoConta = item.saldo;
+      })
+
+      expect(saldoConta).to.equal('123.00');
+    });
   });
 
   it('deve remover uma movimentação', () => {
