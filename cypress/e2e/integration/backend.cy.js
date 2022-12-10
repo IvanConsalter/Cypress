@@ -53,6 +53,22 @@ describe('Teste Api Rest', () => {
   });
 
   it('não deve criar uma conta já existente', () => {
+    cy.request({
+      method: 'POST',
+      url: `${Cypress.env('baseUrlRest')}/contas`,
+      headers: {
+        Authorization: `JWT ${token}`
+      },
+      body: {
+        nome: 'Conta alterada via rest'
+      },
+      failOnStatusCode: false
+    }).as('response')
+
+    cy.get('@response').then( res => {
+      expect(res.status).to.be.equal(400)
+      expect(res.body).to.have.property('error', 'Já existe uma conta com esse nome!')
+    });
   });
 
   it('deve criar uma movimentação', () => {
