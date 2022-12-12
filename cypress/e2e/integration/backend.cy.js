@@ -121,6 +121,18 @@ describe('Teste Api Rest', () => {
   });
 
   it('deve remover uma movimentação', () => {
+    cy.getIdConta(token, contaAlteradaRest).then( idConta => {
+      cy.getIdMovimentacao(token, idConta).then( idMovimentacao => {
+        cy.request({
+          method: 'DELETE',
+          url: `${Cypress.env('baseUrlRest')}/transacoes/${idMovimentacao}`,
+          headers: {
+            Authorization: `JWT ${token}`
+          }
+        })
+        .its('status').should('be.equal', 204);
+      })
+    });
   });
 
   it('deve alterar status de uma conta', () => {

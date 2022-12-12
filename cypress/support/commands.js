@@ -73,3 +73,22 @@ Cypress.Commands.add('getIdConta', (token, nome) => {
   })
   .then( res => res.body[0].id)
 })
+
+Cypress.Commands.add('getIdMovimentacao', (token, idConta) => {
+  cy.request({
+    method: 'GET',
+    url: `${Cypress.env('baseUrlRest')}/extrato/202212`,
+    headers: { Authorization: `JWT ${token}` },
+    qs: {
+      conta_id: idConta
+    }
+  })
+  .then( res => {
+    let idMovimentacao = null;
+    res.body.forEach( item => {
+      if(item.conta_id === idConta) idMovimentacao = item.id;
+    });
+
+    return idMovimentacao;
+  })
+})
