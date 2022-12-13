@@ -5,6 +5,7 @@ const dayjs = require('dayjs')
 describe('Teste Api Rest', () => {
 
   let token;
+  const dataAno = dayjs().format('YYYYMM');
   const contaRest = 'Conta via rest';
   const contaAlteradaRest = 'Conta alterada via rest';
 
@@ -122,7 +123,7 @@ describe('Teste Api Rest', () => {
 
   it('deve remover uma movimentação', () => {
     cy.getIdConta(token, contaAlteradaRest).then( idConta => {
-      cy.getIdMovimentacao(token, idConta).then( idMovimentacao => {
+      cy.getIdMovimentacao(token, idConta, dataAno).then( idMovimentacao => {
         cy.request({
           method: 'DELETE',
           url: `${Cypress.env('baseUrlRest')}/transacoes/${idMovimentacao}`,
@@ -136,6 +137,51 @@ describe('Teste Api Rest', () => {
   });
 
   it('deve alterar status de uma conta', () => {
+    cy.request({
+      method: 'GET',
+      url: `${Cypress.env('baseUrlRest')}/extrato/${dataAno}`,
+      headers: {
+        Authorization: `JWT ${token}`
+      },
+      qs: {
+        orderBy: 'data_pagamento'
+      }
+    }).then( (resposta) => {
+      resposta.body.forEach( item => {
+        if(item.status === false) {
+          item.status = true;
+          cy.getIdMovimentacao(token, item.conta_id, dataAno).then( idMovimentacao => {
+            cy.request({
+              method: 'PUT',
+              url: `${Cypress.env('baseUrlRest')}/transacoes/${idMovimentacao}`,
+              headers: {
+                Authorization: `JWT ${token}`
+              },
+              body: {
+                conta_id: item.conta_id,
+                data_pagamento: dayjs(item.data_pagamento).format('DD/MM/YYYY'),
+                data_transacao: dayjs(item.data_transacao).format('DD/MM/YYYY'),
+                descricao: item.descricao,
+                envolvido: item.envolvido,
+                observacao: item.observacao,
+                parcelamento_id: item.parcelamento_id,
+                status: item.status,
+                tipo: item.tipo,
+                transferencia_id: item.transferencia_id,
+                usuario_id: item.usuario_id,
+                valor: item.valor
+              }
+            }).as('response')
+            
+            cy.get('@response').then( res => {
+              expect(res.status).to.be.equal(200)
+              expect(res.body).to.have.property('id', idMovimentacao)
+              expect(res.body).to.have.property('status', true)
+            });
+          })
+        }
+      })
+    })
   });
 
   it('deve verificar se saldo da conta alterou', () => {

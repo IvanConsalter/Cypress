@@ -26,6 +26,7 @@
 
 import loc from './locators';
 
+
 Cypress.Commands.add('login', (user, password) => {
   cy.visit(Cypress.env('baseUrl'));
   cy.get(loc.LOGIN.EMAIL).type(user);
@@ -74,10 +75,10 @@ Cypress.Commands.add('getIdConta', (token, nome) => {
   .then( res => res.body[0].id)
 })
 
-Cypress.Commands.add('getIdMovimentacao', (token, idConta) => {
+Cypress.Commands.add('getIdMovimentacao', (token, idConta, dataAno) => {
   cy.request({
     method: 'GET',
-    url: `${Cypress.env('baseUrlRest')}/extrato/202212`,
+    url: `${Cypress.env('baseUrlRest')}/extrato/${dataAno}`,
     headers: { Authorization: `JWT ${token}` },
     qs: {
       conta_id: idConta
