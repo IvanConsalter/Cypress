@@ -93,3 +93,24 @@ Cypress.Commands.add('getIdMovimentacao', (token, idConta, dataAno) => {
     return idMovimentacao;
   })
 })
+
+Cypress.Commands.add('getSaldo', (token) => {
+  cy.request({
+    url: `${Cypress.env('baseUrlRest')}/saldo`,
+    method: 'GET',
+    headers: {
+      Authorization: `JWT ${token}`
+    },
+  }).then( (resposta) => {
+    let saldo = null;
+    resposta.body.forEach( item => {
+      if(item.conta === 'Conta para saldo') {
+        saldo = item.saldo;
+      }
+    })
+
+    return saldo;
+  })
+
+  
+})

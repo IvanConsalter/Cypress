@@ -4,7 +4,8 @@ const dayjs = require('dayjs')
 
 describe('Teste Api Rest', () => {
 
-  let token;
+  let token = null;
+  let saldo = null;
   const dataAno = dayjs().format('YYYYMM');
   const contaRest = 'Conta via rest';
   const contaAlteradaRest = 'Conta alterada via rest';
@@ -16,6 +17,13 @@ describe('Teste Api Rest', () => {
       cy.resetRest(token);
     })
   });
+
+  it('deve pegar o saldo inicial', () => {
+    cy.getSaldo(token).then( sld => {
+      expect(sld).to.be.exist
+      saldo = sld;
+    })
+  })
 
   it('deve inserir uma conta', () => {
     cy.request({
@@ -185,5 +193,9 @@ describe('Teste Api Rest', () => {
   });
 
   it('deve verificar se saldo da conta alterou', () => {
+    cy.getSaldo(token).then( sld => {
+      expect(sld).to.be.exist;
+      expect(parseInt(sld)).to.be.greaterThan(parseInt(saldo));
+    })
   });
 });
